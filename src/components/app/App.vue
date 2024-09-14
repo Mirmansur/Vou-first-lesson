@@ -1,16 +1,19 @@
 <template>
   <div class="app">
     <div class="content">
-      <AppInfo />
+      <AppInfo
+        :allMuviesCount="movies.length"
+        :favouriteMoviesCount="movies.filter((c) => c.favourites).length"
+      />
       <div class="search-pen shadow-md bg-[#fcfaf5] p-4 mt-[2rem] rounded-md">
         <Search />
         <Filter />
       </div>
       <div class="search-pen shadow-md bg-[#fcfaf5] p-4 mt-[2rem] rounded-md">
-        <Move />
+        <Move :movies="movies" />
       </div>
       <div class="search-pen shadow-md bg-[#fcfaf5] p-4 mt-[2rem] rounded-md">
-        <MoveForm />
+        <MoveForm @creatMovie="creatMovie" />
       </div>
     </div>
   </div>
@@ -30,6 +33,35 @@ export default {
     Filter,
     Move,
     MoveForm,
+  },
+  data() {
+    return {
+      movies: [
+        {
+          name: "Omar",
+          viewers: 811,
+          favourites: false,
+          like: true,
+        },
+        {
+          name: "transformeri",
+          viewers: 927,
+          favourites: false,
+          like: false,
+        },
+        {
+          name: "Shrek",
+          viewers: 1100,
+          favourites: true,
+          like: false,
+        },
+      ],
+    };
+  },
+  methods: {
+    creatMovie(items) {
+      this.movies.push(items);
+    },
   },
 };
 </script>
