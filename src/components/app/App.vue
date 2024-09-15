@@ -6,11 +6,15 @@
         :favouriteMoviesCount="movies.filter((c) => c.favourites).length"
       />
       <div class="search-pen shadow-md bg-[#fcfaf5] p-4 mt-[2rem] rounded-md">
-        <Search />
+        <Search :updateTermHandler="updateTermHandler" />
         <Filter />
       </div>
       <div class="search-pen shadow-md bg-[#fcfaf5] p-4 mt-[2rem] rounded-md">
-        <Move :movies="movies" />
+        <Move
+          :movies="onSearchHandler(movies, term)"
+          @onToggle="onToggleHandler"
+          @onRemove="onRemoveHandler"
+        />
       </div>
       <div class="search-pen shadow-md bg-[#fcfaf5] p-4 mt-[2rem] rounded-md">
         <MoveForm @creatMovie="creatMovie" />
@@ -42,25 +46,49 @@ export default {
           viewers: 811,
           favourites: false,
           like: true,
+          id: 1,
         },
         {
           name: "transformeri",
           viewers: 927,
           favourites: false,
           like: false,
+          id: 2,
         },
         {
           name: "Shrek",
           viewers: 1100,
           favourites: true,
           like: false,
+          id: 3,
         },
       ],
+      term: "",
     };
   },
   methods: {
-    creatMovie(items) {
-      this.movies.push(items);
+    creatMovie(item) {
+      this.movies.push(item);
+    },
+    onToggleHandler({ id, prop }) {
+      this.movies = this.movies.map((item) => {
+        if (item.id == id) {
+          return { ...item, [prop]: !item[prop] };
+        }
+        return item;
+      });
+    },
+    onRemoveHandler(id) {
+      this.movies = this.movies.filter((item) => item.id !== id);
+    },
+    onSearchHandler(arr, term) {
+      if (term.length == 0) {
+        return arr;
+      }
+      return arr.filter((c) => c.name.toLowerCase().indexOf(term) > -1);
+    },
+    updateTermHandler(term) {
+      this.term = term;
     },
   },
 };

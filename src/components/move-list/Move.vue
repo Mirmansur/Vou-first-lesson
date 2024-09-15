@@ -1,6 +1,12 @@
 <template lang="">
   <ul class="list-group">
-    <MoveListItems v-for="movie in movies" :key="movie.name" :movie="movie" />
+    <MoveListItems
+      v-for="movie in movies"
+      :key="movie.id"
+      :movie="movie"
+      @onToggle="$emit('onToggle', $event)"
+      @onRemove="$emit('onRemove', $event)"
+    />
   </ul>
 </template>
 <script>
