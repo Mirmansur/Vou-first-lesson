@@ -7,11 +7,14 @@
       />
       <div class="search-pen shadow-md bg-[#fcfaf5] p-4 mt-[2rem] rounded-md">
         <Search :updateTermHandler="updateTermHandler" />
-        <Filter />
+        <Filter
+          :updateFilterHandler="updateFilterHandler"
+          :filterName="filter"
+        />
       </div>
       <div class="search-pen shadow-md bg-[#fcfaf5] p-4 mt-[2rem] rounded-md">
         <Move
-          :movies="onSearchHandler(movies, term)"
+          :movies="onFilterhandler(onSearchHandler(movies, term), filter)"
           @onToggle="onToggleHandler"
           @onRemove="onRemoveHandler"
         />
@@ -64,6 +67,7 @@ export default {
         },
       ],
       term: "",
+      filter: "all",
     };
   },
   methods: {
@@ -87,8 +91,22 @@ export default {
       }
       return arr.filter((c) => c.name.toLowerCase().indexOf(term) > -1);
     },
+    onFilterhandler(arr, filter) {
+      switch (filter) {
+        case "popular":
+          return arr.filter((c) => c.like);
+        case "mostViewers":
+          return arr.filter((c) => c.viewers > 500);
+
+        default:
+          return arr;
+      }
+    },
     updateTermHandler(term) {
       this.term = term;
+    },
+    updateFilterHandler(filter) {
+      this.filter = filter;
     },
   },
 };
