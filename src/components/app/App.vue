@@ -1,6 +1,5 @@
 <template>
   <div class="app">
-    <button @click="fetchMovie">clik</button>
     <div class="content">
       <AppInfo
         :allMuviesCount="movies.length"
@@ -104,6 +103,9 @@ export default {
         console.log(error.message);
       }
     },
+  },
+  mounted() {
+    this.fetchMovie();
   },
 };
 </script>
