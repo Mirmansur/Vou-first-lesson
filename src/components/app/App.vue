@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <button @click="fetchMovie">clik</button>
     <div class="content">
       <AppInfo
         :allMuviesCount="movies.length"
@@ -32,7 +33,7 @@ import Search from "@/components/search/Search.vue";
 import Filter from "@/components/filter/Filter.vue";
 import Move from "@/components/move-list/Move.vue";
 import MoveForm from "@/components/move-add-form/MoveForm.vue";
-
+import axios from "axios";
 export default {
   components: {
     AppInfo,
@@ -43,29 +44,7 @@ export default {
   },
   data() {
     return {
-      movies: [
-        {
-          name: "Omar",
-          viewers: 811,
-          favourites: false,
-          like: true,
-          id: 1,
-        },
-        {
-          name: "transformeri",
-          viewers: 927,
-          favourites: false,
-          like: false,
-          id: 2,
-        },
-        {
-          name: "Shrek",
-          viewers: 1100,
-          favourites: true,
-          like: false,
-          id: 3,
-        },
-      ],
+      movies: [],
       term: "",
       filter: "all",
     };
@@ -107,6 +86,23 @@ export default {
     },
     updateFilterHandler(filter) {
       this.filter = filter;
+    },
+    async fetchMovie() {
+      try {
+        const { data } = await axios.get(
+          "https://jsonplaceholder.typicode.com/posts?_limit=10"
+        );
+        const newArr = data.map((item) => ({
+          id: item.id,
+          name: item.title,
+          viewers: item.id * 10,
+          favourites: false,
+          like: false,
+        }));
+        this.movies = newArr;
+      } catch (error) {
+        console.log(error.message);
+      }
     },
   },
 };
