@@ -12,7 +12,16 @@
           :filterName="filter"
         />
       </div>
+
       <div class="search-pen shadow-md bg-[#fcfaf5] p-4 mt-[2rem] rounded-md">
+        <div v-if="isLoading">Loading...</div>
+        <div
+          v-else-if="!movies.length"
+          class="text-center text-2xl text-red-700 font-medium"
+        >
+          Kinolar yo'q
+        </div>
+
         <Move
           :movies="onFilterhandler(onSearchHandler(movies, term), filter)"
           @onToggle="onToggleHandler"
@@ -46,6 +55,7 @@ export default {
       movies: [],
       term: "",
       filter: "all",
+      isloading: false,
     };
   },
   methods: {
@@ -87,21 +97,24 @@ export default {
       this.filter = filter;
     },
     async fetchMovie() {
-      try {
-        const { data } = await axios.get(
-          "https://jsonplaceholder.typicode.com/posts?_limit=10"
-        );
-        const newArr = data.map((item) => ({
-          id: item.id,
-          name: item.title,
-          viewers: item.id * 10,
-          favourites: false,
-          like: false,
-        }));
-        this.movies = newArr;
-      } catch (error) {
-        console.log(error.message);
-      }
+      setTimeout(async () => {
+        try {
+          const { data } = await axios.get(
+            "https://jsonplaceholder.typicode.com/posts?_limit=10"
+          );
+          const newArr = data.map((item) => ({
+            id: item.id,
+            name: item.title,
+            viewers: item.id * 10,
+            favourites: false,
+            like: false,
+          }));
+          this.movies = newArr;
+          this.isloading = false;
+        } catch (error) {
+          console.log(error.message);
+        }
+      }, 3000);
     },
   },
   mounted() {
